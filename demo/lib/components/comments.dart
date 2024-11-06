@@ -1,22 +1,48 @@
+import 'package:demo/graphql_query.dart';
 import 'package:flutter/material.dart';
+import 'package:graphql_flutter/graphql_flutter.dart';
 
-class Comments extends StatelessWidget{
+class Comment extends StatefulWidget{
   late List comments ;
-  Comments({required List data}){
+  late BuildContext context;
+  Comment({required List data,
+  required BuildContext context}){
     this.comments = data;
+    this.context = context;
   } 
   @override
+  State<StatefulWidget> createState() => _CommentState();
+  
+}
+
+class _CommentState extends State<Comment> {
+  late BuildContext ctx;
+  late List comments ;
+  List<bool> isEdit = [];
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    this.comments = widget.comments;
+    this.ctx = widget.context;
+    for(int i = 0 ; i < comments.length; ++i)
+      isEdit.add(false);
+  }
+  @override
   Widget build(BuildContext context) {
+    ctx = context;
     return ListView.builder(
           itemCount: comments.length,
           itemBuilder: (context, index){
             final comment = comments[index];
+            final editController = TextEditingController(text: comment['body']);
             return Container(
               margin: EdgeInsets.all(15),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
+                  //AVATAR
                   Container(
                     width: 30,
                     margin: EdgeInsets.only(right: 10),
@@ -29,10 +55,12 @@ class Comments extends StatelessWidget{
                     ),
                     child: Icon(Icons.person_add_alt_1_rounded),
                   ),
+                  //COMMENT INFRORMATION
                   Expanded(
                     child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      //USER EMAIL
                       Text(
                         comment['email'],
                         style: TextStyle(
@@ -42,17 +70,87 @@ class Comments extends StatelessWidget{
                         ),
                       ),
                       SizedBox(height: 5,),
-                      Text(
-                        comment['body'].toString().replaceAll('\n', ' '),
-                        maxLines: 5,
-                        textAlign: TextAlign.justify,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: Colors.black,
-                          fontWeight: FontWeight.normal
+                      //COMMENT CONTENT 
+                      (isEdit[index]) ?
+                        TextFormField(
+                          controller: editController,
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: Colors.black,
+                            fontWeight: FontWeight.normal,
+                          ),
+                          maxLines: 4,
+                        ) :
+                        Text(
+                          comment['body'].toString().replaceAll('\n', ' '),
+                          maxLines: 5,
+                          textAlign: TextAlign.justify,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: Colors.black,
+                            fontWeight: FontWeight.normal
+                          ),
                         ),
-                      ),
+                      //EDIT BUTTON 
+                      Row(
+                        children: [
+                          Icon(Icons.favorite, color: Colors.red, size: 20,),
+                          (!isEdit[index]) ? 
+                          TextButton(
+                            onPressed: (){
+                              //UPDATE COMMENT 
+                              setState(() {
+                                isEdit[index] = !isEdit[index];
+                              });
+                              // showEditDialog(int.parse(comment['id']), comment['name'], comment['email'], comment['body']);
+                            }, 
+                            child: Text(
+                              "Edit",
+                              style: TextStyle(
+                                color: Colors.blue.shade400
+                              ),  
+                            ),
+                          ) : 
+                          Mutation(
+                            options:MutationOptions(
+                              document: gql(GraphqlQuery.updateComment),
+                              onCompleted: (dynamic resultData){
+                                if(resultData != null){
+                                  /// show dialog to inform result here 
+                                  print("UPDATE SUCCESS");
+                                  showEditDialog(resultData);
+                                }else {
+                                  print("result data is null");
+                                }
+                              },
+                              onError: (error){
+                                print("ERROR --" + error.toString());
+                              }
+                            ), 
+                            builder: (RunMutation runMutation, QueryResult? result){
+                              return TextButton(
+                                onPressed: (){
+                                  setState(() {
+                                    isEdit[index] = !isEdit[index];
+                                  });
+                                  runMutation(
+                                    {
+                                      "idUpdate" : comment['id'],
+                                      "inputUpdate": {
+                                        "name" : comment['name'],
+                                        "body" : editController.value.text,
+                                        "email": comment['email'],
+                                      }
+                                    }
+                                  );
+                                }, 
+                                child:Text("Save"),
+                              );
+                            }
+                          )
+                        ],
+                      )
                     ],
                   ),
                   )
@@ -61,93 +159,28 @@ class Comments extends StatelessWidget{
             );
           }
         );
+  }
 
+  void showEditDialog(dynamic resultdata){
+    bool isGetResult = false;
+    showDialog(
+      context: context, 
+      builder: (ctx) => AlertDialog(
+        title: Text("Update Comment Result"),
+        content: Text(
+          resultdata['updateComment']['body'],
+        ),
+        actions: [
+          TextButton(
+            onPressed: (){
+              Navigator.of(ctx).pop();
+            }, 
+            child: Text("OK"),
+          )
+        ],
+      ),
+    );
   }
   
 }
 
-
-// class Post extends StatelessWidget{
-//   late dynamic post;
-//   late dynamic user;
-//   Post({required var post,
-//     required var user,
-//   }) {
-//     this.post = post;
-//     this.user = user;
-//   }
-//   @override
-//   Widget build(BuildContext context) {
-//     print("USER ---- " +user);
-//     print("POST ----" + post);
-//     return Center(child: Text("TEMP Data"),);
-//     // Card(
-//     //   color: Color(0xffc8d9e6),
-//     //   child: Padding(
-//     //     padding: EdgeInsets.all(10),
-//     //     child: Column(
-//     //       children: [
-//     //         //USER INFORMATION 
-//     //         Row(
-//     //           mainAxisAlignment: MainAxisAlignment.start,
-//     //           children: [
-//     //             Container(
-//     //               margin: EdgeInsets.only(right: 20),
-//     //               decoration: BoxDecoration(
-//     //                 shape: BoxShape.circle,
-//     //                 border: Border.all(
-//     //                   width: 1.0,
-//     //                   color: Colors.black
-//     //                 )
-//     //               ),
-//     //               child: Icon(Icons.person, size: 30,),
-//     //             ),
-//     //             Column(
-//     //               crossAxisAlignment: CrossAxisAlignment.start,
-//     //               children: [
-//     //                 Text(post['username']),
-//     //                 Text(post['email'])
-//     //               ],
-//     //             )
-//     //           ],
-//     //         ),
-//     //         SizedBox(height: 20,),
-//     //         //CONTENT OF POST 
-//     //         Container(
-//     //           margin: EdgeInsets.all(5),
-//     //           padding: EdgeInsets.all(15),
-//     //           decoration: BoxDecoration(
-//     //             borderRadius: BorderRadius.circular(5),
-//     //             border: Border.all(
-//     //               color: Colors.black,
-//     //               width: 1.0
-//     //             ),
-//     //           ),
-//     //           child: Padding(
-//     //             padding: EdgeInsets.all(10),
-//     //             child: Column(
-//     //               children: [
-//     //                 Text(
-//     //                   post['title'],
-//     //                   textAlign: TextAlign.justify,
-//     //                   style: TextStyle(
-//     //                     fontSize: 18,
-//     //                     fontWeight: FontWeight.bold,
-//     //                   ),
-//     //                 ),
-//     //                 Text(
-//     //                   post['body'],
-//     //                   textAlign: TextAlign.justify,
-
-//     //                 )
-//     //               ],
-//     //             ),  
-//     //           ),
-//     //         )
-//     //       ],
-//     //     ),  
-//     //   ),
-//     // );
-//   }
-  
-// }

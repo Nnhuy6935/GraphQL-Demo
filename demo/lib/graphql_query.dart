@@ -48,23 +48,23 @@ class GraphqlQuery {
     }
 
   """;
-  static String getAllComment = """
-    query{
-      comments{
-        data{
-          id
-          email
-          name
-          body
-          post{
-            id
-            title
-            body
-          }
-        }
-      }
-    }
-  """;
+  // static String getAllComment = """
+  //   query{
+  //     comments{
+  //       data{
+  //         id
+  //         email
+  //         name
+  //         body
+  //         post{
+  //           id
+  //           title
+  //           body
+  //         }
+  //       }
+  //     }
+  //   }
+  // """;
 
   static String getCommentWithId(int id){
     return """
@@ -78,7 +78,7 @@ class GraphqlQuery {
       }
     """;
   }
-
+  //USED
   static String getCommentFromPostId(int id){
     return 
     """
@@ -89,9 +89,11 @@ class GraphqlQuery {
           body
           user{
             username
+            email
           }
           comments{
             data{
+              id
               name
               email
               body
@@ -101,15 +103,16 @@ class GraphqlQuery {
       }
     """;
   }
-  static String getPostWithId(int id){
-    return """
-      query{
-        post(id: $id){
+  // static String getPostWithId(int id){
+  //   return """
+  //     query{
+  //       post(id: $id){
 
-        }
-      }
-    """;
-  }
+  //       }
+  //     }
+  //   """;
+  // }
+  //USED 
   static String addCommentToPost(
     ){
     return r'''
@@ -122,7 +125,29 @@ class GraphqlQuery {
       }
     }
     ''';
-
-    
   }
+  static String updateComment = r'''
+   mutation(
+      $idUpdate: ID!
+      $inputUpdate: UpdateCommentInput!
+    ){
+      updateComment(id: $idUpdate, input: $inputUpdate){
+        id 
+        name
+        email
+        body
+      }
+    }
+  ''';
 }
+
+String sampleData = """
+  {
+    "idUpdate": 1,
+    "inputUpdate": {
+      "name" : "Nguyen thi như Ý",
+      "body": "update to this ",
+      "email": "myemail@gmail.com"
+    }
+  }
+""";

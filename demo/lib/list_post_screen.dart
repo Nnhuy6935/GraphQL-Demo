@@ -28,11 +28,9 @@ class _UserListState extends State<UserListScreen>{
               child: Text("Error: ${result.exception.toString()}"),
             );
           }
-          // print(result.data);
           final List posts = result.data!['posts']['data'];
           for(int i = 0 ; i < posts.length; ++i)
             isFavorite.add(false);
-          // print(posts);
           return ListView.builder(
             itemCount: posts.length,
             itemBuilder: (context, index){
@@ -139,6 +137,12 @@ class _UserListState extends State<UserListScreen>{
             }
           );
         },
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: (){
+
+        },
+        child: Icon(Icons.add),
       ),
     );
   }

@@ -33,13 +33,14 @@ class _CommentState extends State<CommentScreen>{
       body: Query(
         options: QueryOptions(document: gql(GraphqlQuery.getCommentFromPostId(id))), 
         builder: (QueryResult result, {VoidCallback? refetch, FetchMore? fetchMore}){
+          print("COME TO BUILDER");
           if(result.isLoading){
             return Center(
               child: CircularProgressIndicator(),
             );
           }
           if(result.hasException){
-            print(result.exception.toString());
+            print("ERROR NHA ...." + result.exception.toString());
             return Center(
               child: Text("Error: ${result.exception.toString()}"),
             );
@@ -48,17 +49,16 @@ class _CommentState extends State<CommentScreen>{
           final postTitle = result.data?['post']['title'];
           final postBody = result.data?['post']['body'];
           final user = result.data?['post']['user'];
-          print("POST TITLE ---- " + postTitle);
-          print("POST BODY---- " + postBody);
+          
 
-          print("USER ---- " + user);
           return Column(
             children: [
+              
               // Expanded(
-              //   child: Post(post: post, user: user),
+              //   child: Post(postTitle: postTitle, postContent: postBody, user: user),
               // ),
               Expanded(
-                child: Comments(data: comments),
+                child: Comment(data: comments, context: context ,),
               ),
               Container(
                 margin: EdgeInsets.all(10),
