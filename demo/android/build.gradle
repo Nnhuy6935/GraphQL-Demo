@@ -3,6 +3,9 @@ allprojects {
         google()
         mavenCentral()
     }
+    dependencies{
+        // classpath ('com.android.tools.build:gradle:7.0.2')
+    }
 }
 
 rootProject.buildDir = "../build"
@@ -16,3 +19,9 @@ subprojects {
 tasks.register("clean", Delete) {
     delete rootProject.buildDir
 }
+
+// buildscript {
+//     dependencies{
+//         classpath ('com.android.tools.build:gradle:7.0.2')
+//     }
+// }

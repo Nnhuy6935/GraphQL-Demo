@@ -11,6 +11,13 @@ class UserListScreen extends StatefulWidget{
 class _UserListState extends State<UserListScreen>{
   List<bool> isFavorite = [];
   bool isCommentShow = false;
+  List<String> lstAvatar = [
+    'assets/images/avatar1.png',
+    'assets/images/avatar2.png',
+    'assets/images/avatar3.png',
+    'assets/images/avatar4.png',
+    'assets/images/avatar5.png',
+  ];
   @override
   Widget build(BuildContext context) {
     return  Scaffold(
@@ -50,17 +57,21 @@ class _UserListState extends State<UserListScreen>{
                               mainAxisAlignment: MainAxisAlignment.start,
                               children: [
                                 // Image.asset('assets/image/avatar.png', width: 30, height: 30,),
-                                Container(
-                                  margin: EdgeInsets.only(right: 20),
-                                  decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    border: Border.all(
-                                      width: 1.0,
-                                      color: Colors.black
-                                    )
-                                  ),
-                                  child: Icon(Icons.person, size: 30,),
+                                CircleAvatar(
+                                  radius: 50.0,
+                                  backgroundImage: AssetImage(lstAvatar[index % 5]),
                                 ),
+                                // Container(
+                                //   margin: EdgeInsets.only(right: 20),
+                                //   decoration: BoxDecoration(
+                                //     shape: BoxShape.circle,
+                                //     border: Border.all(
+                                //       width: 1.0,
+                                //       color: Colors.black
+                                //     )
+                                //   ),
+                                //   child: Icon(Icons.person, size: 30,),
+                                // ),
                                 Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
