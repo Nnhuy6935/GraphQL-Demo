@@ -22,6 +22,7 @@ class _CommentState extends State<CommentScreen>{
     super.initState();
     this.id = widget.id;
   }
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -117,6 +118,7 @@ class _CommentState extends State<CommentScreen>{
                                 }
                               }
                             );
+                            cmtController = TextEditingController();
                           }, 
                           icon: Icon(Icons.send)
                         )

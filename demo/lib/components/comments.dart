@@ -19,6 +19,13 @@ class _CommentState extends State<Comment> {
   late BuildContext ctx;
   late List comments ;
   List<bool> isEdit = [];
+  List<String> lstAvatar = [
+    'assets/images/avatar1.png',
+    'assets/images/avatar2.jpg',
+    'assets/images/avatar3.jpg',
+    'assets/images/avatar4.jpg',
+    'assets/images/avatar5.jpg',
+  ];
   @override
   void initState() {
     // TODO: implement initState
@@ -44,17 +51,26 @@ class _CommentState extends State<Comment> {
                 children: [
                   //AVATAR
                   Container(
-                    width: 30,
-                    margin: EdgeInsets.only(right: 10),
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                        color: Colors.black,
-                        width: 1,
-                      ),
-                      shape: BoxShape.circle,
+                    width: 40,
+                    height: 40,
+                    child: CircleAvatar(
+                      radius: 50.0,
+                      backgroundImage: AssetImage(lstAvatar[index % 5]),
                     ),
-                    child: Icon(Icons.person_add_alt_1_rounded),
                   ),
+                  SizedBox(width: 10,),
+                  // Container(
+                  //   width: 30,
+                  //   margin: EdgeInsets.only(right: 10),
+                  //   decoration: BoxDecoration(
+                  //     border: Border.all(
+                  //       color: Colors.black,
+                  //       width: 1,
+                  //     ),
+                  //     shape: BoxShape.circle,
+                  //   ),
+                  //   child: Icon(Icons.person_add_alt_1_rounded),
+                  // ),
                   //COMMENT INFRORMATION
                   Expanded(
                     child: Column(

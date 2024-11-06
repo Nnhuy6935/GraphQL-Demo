@@ -1,34 +1,4 @@
 class GraphqlQuery {
-  // static String readAllUser= """
-  //   query {
-  //     users {
-  //       data {
-  //         id
-  //         name
-  //         username
-  //         phone
-  //       }
-  //     }
-  //   }
-  // """;
-  // static var userinput = {
-  //   "userinput": {
-  //     "name" : "Nguyen thi như Ý",
-  //     "username": "nnhuy",
-  //     "email": "myemail@gmail.com"
-  //   }
-  // };
-  // static String createUser = """
-  // mutation(
-  //   $userinput: CreateUserInput!
-  // ){
-  //   createUser(input: $userinput){
-  //     name,
-  //     username,
-  //     email,
-  //   }
-  // }
-  // """;
 
  
 
@@ -48,23 +18,6 @@ class GraphqlQuery {
     }
 
   """;
-  // static String getAllComment = """
-  //   query{
-  //     comments{
-  //       data{
-  //         id
-  //         email
-  //         name
-  //         body
-  //         post{
-  //           id
-  //           title
-  //           body
-  //         }
-  //       }
-  //     }
-  //   }
-  // """;
 
   static String getCommentWithId(int id){
     return """
@@ -78,7 +31,6 @@ class GraphqlQuery {
       }
     """;
   }
-  //USED
   static String getCommentFromPostId(int id){
     return 
     """
@@ -103,16 +55,6 @@ class GraphqlQuery {
       }
     """;
   }
-  // static String getPostWithId(int id){
-  //   return """
-  //     query{
-  //       post(id: $id){
-
-  //       }
-  //     }
-  //   """;
-  // }
-  //USED 
   static String addCommentToPost(
     ){
     return r'''
@@ -140,14 +82,3 @@ class GraphqlQuery {
     }
   ''';
 }
-
-String sampleData = """
-  {
-    "idUpdate": 1,
-    "inputUpdate": {
-      "name" : "Nguyen thi như Ý",
-      "body": "update to this ",
-      "email": "myemail@gmail.com"
-    }
-  }
-""";
